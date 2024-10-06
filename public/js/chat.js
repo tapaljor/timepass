@@ -1,4 +1,4 @@
-var socket = io.connect('https://timepass-2af3f609bb70.herokuapp.com/');
+var socket = io.connect('localhost:3000');
 
 //receiving msg through socket/server
 socket.on('updatedUser', (data) => {
