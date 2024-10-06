@@ -1,3 +1,5 @@
+const port = process.env.PORT || 3000;
+
 var express = require('express');
 var socket = require('socket.io');
 var path = require('path');
@@ -117,7 +119,7 @@ app.use(sessionMiddleware);
         }
     });
     // Start the server
-    var server = app.listen(3000, function () {
+    var server = app.listen(port, function () {
         console.log('Server running on port 3000');
     });
     // Attach socket.io to the server
