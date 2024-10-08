@@ -47,7 +47,7 @@ const sessionMiddleware = session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        sameSite: 'Lax', 
+        sameSite: 'Lax',
         secure: false,
         maxAge: 600000
     }
@@ -55,6 +55,14 @@ const sessionMiddleware = session({
 
 // session middleware in express
 app.use(sessionMiddleware);
+
+// Middleware to check if the user is authenticated
+function isAuthenticated(req, res, next) {
+    if (req.session.username) {
+        return next();
+    }
+    res.redirect('/');  // Redirect to login page if not authenticated
+}
 
 // Initiate server and database connection
 (async () => {
@@ -70,7 +78,28 @@ app.use(sessionMiddleware);
     app.get("/", async (req, res) => {
         try {
             const rooms = await db.collection("chaRooms").find({}).toArray();
-            res.render('index', { rooms });
+            res.render('index', { rooms, username: req.session.username });
+        } catch (err) {
+            console.error(err);
+        }
+    });
+    app.get("/logout", async (req, res) => {
+        try {
+            const deleteUser = await db.collection("chaUsers").deleteOne(
+                { username: req.session.username }
+            );
+            // Check if the user was actually deleted
+            if (deleteUser.deletedCount > 0) {
+                // Destroy the session
+                req.session.destroy((Serr) => {
+                    if (Serr) {
+                        console.error("Error destroying session: ", Serr);
+                        return res.status(500).render('index', { error: "An error occurred during logout." });
+                    } else {
+                        res.redirect("/");
+                    } 
+                });
+            }
         } catch (err) {
             console.error(err);
         }
@@ -81,20 +110,20 @@ app.use(sessionMiddleware);
         try {
             const users = await db.collection("chaUsers").find({}).toArray();
             const rooms = await db.collection("chaRooms").find({}).toArray();
-            res.render('users', { users, rooms });
+            res.render('users', { users, rooms, username: req.session.username });
         } catch (err) {
             console.error(err);
         }
     });
-    app.get("/users", async (req, res) => {
+    app.get("/users", isAuthenticated, async (req, res) => {
         try {
             if (req.session.username) {
                 const users = await db.collection("chaUsers").find({}).toArray();
                 const rooms = await db.collection("chaRooms").find({}).toArray();
-                res.render('users', { users, rooms });
+                res.render('users', { users, rooms, username: req.session.username });
             } else {
                 const rooms = await db.collection("chaRooms").find({}).toArray();
-                res.render('index', { rooms });
+                res.render('index', { rooms, username: req.session.username });
             }
         } catch (err) {
             console.error(err);
@@ -110,10 +139,10 @@ app.use(sessionMiddleware);
             console.error(err);
         }
     });
-    app.get("/to/:too", async (req, res) => {
+    app.get("/to/:too", isAuthenticated, async (req, res) => {
         try {
             const users = await db.collection("chaUsers").find({}).toArray();
-            res.render('index', { users, fromm: req.session.username, too: req.params.too });
+            res.render('index', { users, fromm: req.session.username, too: req.params.too, username: req.session.username });
         } catch (err) {
             console.error(err);
         }

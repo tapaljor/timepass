@@ -169,6 +169,7 @@ button:hover {
 #chat-right h1 {
     font-size: 1.2rem;
     margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
 }
 #chat-right p {
     margin-bottom: 20px;

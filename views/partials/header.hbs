@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,12 @@
     <!-- Navigation menu -->
     <nav class="menu">
         <!-- Desktop Links -->
-        <a href="/" class="nav-link desktop-only">Home</a>
         <a href="/users" class="nav-link desktop-only" id="users-link">Users</a>
+        {{#if username}}
+        <a href="/logout" class="nav-link desktop-only" id="users-link">Logout</a>
+        {{else}}
+        <a href="/" class="nav-link desktop-only" id="users-link">Login</a>
+        {{/if}}
 
         <!-- Mobile Menu Trigger (///) -->
         <input type="checkbox" id="mobile-menu-toggle" class="mobile-toggle">
@@ -17,9 +22,14 @@
 
         <!-- Mobile Menu (Initially hidden) -->
         <div class="mobile-menu">
-            <a href="/" class="nav-link">Home</a>
             <a href="/users" id="mobile-users-link" class="nav-link">Users</a>
+            {{#if username}}
+            <a href="/logout" class="nav-link" id="users-link">Logout</a>
+            {{else}}
+            <a href="/" class="nav-link" id="users-link">Login</a>
+            {{/if}}
         </div>
     </nav>
 </head>
+
 <body>

@@ -10,10 +10,10 @@
         <input type="hidden" id="too" name="too" value="{{too}}" />
         <input id="message" name="message" type="text" placeholder="Message..">
         <button id="sendMessage">Send</button>
-        {{else}}
-        <p>Please go to home and enter nickname/username to start.</p>
         {{/if}}
-        {{else}}
+        {{/if}}
+
+        {{#unless username}} <!-- if already logged in-->
         <p>Welcome to private chat. Please enter nickname/username to start. We do not ask any personal information. We
             do not keep chat history.</p>
         <input id="username" name="username" type="text" placeholder="Enter your username" required="required">
@@ -26,7 +26,7 @@
         </select>
         {{/if}}
         <button id="userJoin" type="submit">Start</button>
-        {{/if}}
+        {{/unless}}
     </article>
     <!-- Right side: Lounge for all users -->
     <article id="chat-right">
