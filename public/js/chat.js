@@ -34,7 +34,7 @@ socket.on('chat', function (data) {
 	let notifications = document.getElementById('notifications');
 	let lin = document.createElement('li');
 	lin.innerHTML = `<a href="/to/${data.fromm}">New message from ${data.fromm}</a>`;
-	notifications.appendChild(lin);
+	notifications.prepend(lin);
 });
 socket.on('typing', function (data) {
 	let typingMsg = document.getElementById('actions');
